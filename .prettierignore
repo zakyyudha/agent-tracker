@@ -1,0 +1,8 @@
+node_modules/
+.next/
+index.html
+pnpm-lock.yaml
+.snapshot.css
+kanban.db
+kanban.db-wal
+kanban.db-shm

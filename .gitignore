@@ -1,0 +1,28 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# Next.js build & runtime
+.next/
+out/
+
+# pre-compiled CLI output (built via pnpm run build:cli)
+dist/
+
+# SQLite database and static snapshot (runtime-only for agent-tracker repository)
+kanban.db
+index.html
+
+# SQLite WAL and runtime artifacts
+*.db-wal
+*.db-shm
+.snapshot.css
+
+# environment variables
+.env
+.env.*
+!.env.example
+
+# logs & OS
+*.log
+.DS_Store

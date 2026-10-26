@@ -1,0 +1,49 @@
+{
+  "name": "agent-tracker",
+  "version": "0.2.0",
+  "description": "Local-first, Git-backed execution harness and Kanban engine for AI coding agents",
+  "private": false,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zakyyudha/agent-tracker.git"
+  },
+  "packageManager": "pnpm@10.22.0",
+  "scripts": {
+    "dev": "next dev -p 3100",
+    "build": "pnpm run build:cli && next build",
+    "build:cli": "node scripts/build-cli.cjs",
+    "start": "next start -p 3100",
+    "cli": "tsx src/cli.ts",
+    "snapshot": "tsx scripts/snapshot.tsx",
+    "format": "prettier --write \"{app,components,lib,scripts,src}/**/*.{ts,tsx,css,json}\"",
+    "format:check": "prettier --check \"{app,components,lib,scripts,src}/**/*.{ts,tsx,css,json}\""
+  },
+  "dependencies": {
+    "mermaid": "^12.2.0",
+    "next": "^16.4.2",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-markdown": "^10.1.0",
+    "rehype-mermaid": "^3.0.0",
+    "remark-gfm": "^4.0.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^22.10.7",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "commander": "^15.0.0",
+    "prettier": "^3.9.10",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "@tailwindcss/oxide"
+    ]
+  }
+}
