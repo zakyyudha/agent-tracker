@@ -1,0 +1,3 @@
+interface:
+  display_name: "Agent Tracker"
+  short_description: "Git-backed Kanban state machine and execution harness for AI coding agents"

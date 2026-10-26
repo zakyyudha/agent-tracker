@@ -107,6 +107,24 @@ node cli.mjs render
 
 ---
 
+## 🧠 Agent Skill Integration
+
+This repository ships with a ready-to-use coding agent skill in `skills/agent-tracker/`:
+
+- **Path:** [`skills/agent-tracker/SKILL.md`](skills/agent-tracker/SKILL.md)
+- **Compatibility:** Antigravity, OpenCode, Claude Code, Cursor, Codex.
+
+### Installing into your Project's Agent Setup:
+Copy the skill directory into your project's `.agents/skills/` (or your platform's skill directory):
+```bash
+mkdir -p .agents/skills/agent-tracker
+cp -r tracker/skills/agent-tracker/* .agents/skills/agent-tracker/
+```
+
+When installed, AI coding agents automatically discover the skill and follow the **Discipline Loop**: inspecting the frontier, decomposing atomic tickets, recording real test evidence, and maintaining 1 ticket = 1 commit.
+
+---
+
 ## 🛠️ CLI Reference
 
 ### Basic Commands
