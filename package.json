@@ -1,6 +1,6 @@
 {
   "name": "agent-tracker",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Local-first, Git-backed execution harness and Kanban engine for AI coding agents",
   "private": false,
   "license": "MIT",

@@ -1,6 +1,8 @@
 // Akses read-only ke tracker/kanban.db. Writer satu-satunya: tracker/cli.mjs (lihat AGENTS.md).
+import { readFileSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type {
   BacklogResponse,
   BoardBr,
@@ -15,10 +17,35 @@ import { STATUSES } from './types';
 
 // App dijalankan dengan cwd = tracker/ (next dev / next start / tsx snapshot).
 export const DB_PATH = process.env.TRACKER_DB ?? path.resolve(process.cwd(), 'kanban.db');
+const SCHEMA_PATH = fileURLToPath(new URL('../schema.sql', import.meta.url));
 
 let db: DatabaseSync | null = null;
+
+/**
+ * Board membaca DB secara read-only, tetapi DB bisa berasal dari versi lama
+ * (kolom baru belum ada) atau belum dibuat pada clone baru. Siapkan sekali
+ * di awal dengan koneksi writable: jalankan schema.sql + kolom yang hilang.
+ */
+function prepareDb(): void {
+  const writable = new DatabaseSync(DB_PATH);
+  try {
+    writable.exec(readFileSync(SCHEMA_PATH, 'utf8'));
+    const cols = (writable.prepare('PRAGMA table_info(ticket)').all() as { name: string }[]).map(
+      (c) => c.name,
+    );
+    if (!cols.includes('evidence')) writable.exec('ALTER TABLE ticket ADD COLUMN evidence TEXT');
+    if (!cols.includes('description'))
+      writable.exec('ALTER TABLE ticket ADD COLUMN description TEXT');
+  } finally {
+    writable.close();
+  }
+}
+
 function openDb(): DatabaseSync {
-  db ??= new DatabaseSync(DB_PATH, { readOnly: true });
+  if (!db) {
+    prepareDb();
+    db = new DatabaseSync(DB_PATH, { readOnly: true });
+  }
   return db;
 }
 
