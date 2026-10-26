@@ -133,11 +133,22 @@ node cli.mjs backlog delete <id> --yes            # Cascade deletes associated t
 ```bash
 node cli.mjs ticket list <backlog-id> [--json]
 node cli.mjs ticket show <id> [--json]
-node cli.mjs ticket add <backlog-id> --name "<name>" [--assignee "TBD"] [--sprint "Backlog"] [--seq n]
-node cli.mjs ticket update <id> [--name "<name>"] [--assignee "…"] [--sprint "…"] [--evidence "…"] [--seq n]
+node cli.mjs ticket add <backlog-id> --name "<name>" [options]
+node cli.mjs ticket update <id> [options]
 node cli.mjs ticket delete <id> --yes
 node cli.mjs ticket status <id> <status> [--evidence "<proof>"]
 ```
+
+**Options for `ticket add` & `ticket update`:**
+| Flag | Type | Description |
+|---|---|---|
+| `--name <text>` | string | Ticket title / summary (required for `add`) |
+| `--desc <text>` | string | Specific micro-scope, deliverables, and test scenarios inline |
+| `--desc-file <path>` | filepath | Specific ticket deliverables from Markdown file |
+| `--assignee <text>` | string | Assignee name (default: `TBD`) |
+| `--sprint <text>` | string | Sprint name (default: `Backlog`) |
+| `--seq <number>` | integer | Sequential order within backlog |
+| `--evidence <text>` | string | *(update only)* Terminal verification proof |
 
 ### 5. Business Requirement Management (`brd` table)
 ```bash
@@ -147,9 +158,49 @@ node cli.mjs brd add --title "<title>" --description "<description>" [--id BR-00
 
 ---
 
+## 📐 Document Ingestion & High-Fidelity Detailing Standard
+
+When an agent is tasked with ingesting an architecture document (SAD), product requirements (PRD), or user stories:
+
+### 1. Modular Subsystem Decomposition
+- **Forbidden:** Cramming a comprehensive multi-chapter document into a single generic backlog.
+- **Required:** Decompose the system into distinct, modular backlogs representing cohesive domain boundaries or subsystems (e.g. `ROUTING`, `STREAMING-PROXY`, `ADMIN-API`, `DASHBOARD-UI`).
+- Attach each backlog to its parent Business Requirement (`brd`).
+
+### 2. Mandatory Backlog Quality Standards (Never Inline 1-Paragraph Summaries)
+Do not use short inline `--ac "..."` for complex features. Always draft structured Markdown files in `.tmp/` and attach them via CLI:
+
+- **Acceptance Criteria (`--ac-file <path>`):**
+  - Section 1: API contracts, query parameters, route definitions, headers.
+  - Section 2: Concrete functional checklist per component with exact numbers & values from the spec.
+  - Section 3: Gherkin behavioral test scenarios (`Given [state] When [action] Then [outcome]`).
+  - Section 4: Non-functional requirements (latensi SLA, memory limits, caching policy).
+- **Definition of Done (`--dod-file <path>`):**
+  - Static analysis quality gates (`0 errors`, strict lint, formatting).
+  - Test coverage thresholds (e.g. $\ge 80\%$ statements/branches/lines).
+  - Database schema reversibility (up & down migrations tested).
+  - Security, authorization guards, and error fallback rules.
+- **Architectural Notes (`--notes-file <path>`):**
+  - Mermaid architecture & sequence diagrams (will render natively in the Next.js board!).
+  - Exact JSON request / response payloads with real field names.
+  - Database schema definitions (DDL, primary keys, indexes).
+
+### 3. Ticket-Level Scope & Micro-Deliverables
+Each atomic ticket must declare its specific scope using `--desc-file`:
+```bash
+node cli.mjs ticket update <ticket-id> --desc-file .tmp/<ticket-spec>.md
+```
+Specify:
+- Exact files/modules to create or modify.
+- Concrete classes, functions, or database migrations to implement.
+- Specific unit or integration test cases to run for evidence.
+
+---
+
 ## 🚫 Hallucination Guardrails & Anti-Patterns
 
 1. **Never claim completion without execution:** Stating "the code should now work" or "syntax looks correct" without executing the relevant test or command will fail review.
 2. **Never skip states:** Direct jumps from `todo` to `done` or `in_progress` to `done` are rejected by the state machine.
 3. **Never work on non-frontier tickets:** Picking tickets when prior sequential tickets are still `todo` breaks dependency ordering.
 4. **Never bundle multiple tickets into one commit:** Keep diffs atomic, self-contained, and isolated to the claimed ticket.
+5. **Never accept vague single-sentence backlogs:** Always detail acceptance criteria, DoD, and notes before claiming implementation tickets.

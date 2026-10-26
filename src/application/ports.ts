@@ -17,6 +17,7 @@ export interface TicketPatch {
   task_id?: string;
   seq?: number;
   name?: string;
+  description?: string | null;
   assignee?: string;
   sprint?: string;
   evidence?: string | null;

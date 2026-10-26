@@ -58,6 +58,9 @@ export function printTicketContext(ctx: TicketContext): void {
   console.log(`Assignee  : ${ctx.ticket.assignee} · Sprint: ${ctx.ticket.sprint}`);
   console.log(`Diperbarui: ${ctx.ticket.updated_at}`);
   console.log(`Evidence  : ${ctx.ticket.evidence || '-'}`);
+  if (ctx.ticket.description) {
+    console.log(`\nDeskripsi :\n${ctx.ticket.description}`);
+  }
   console.log(`\nBacklog   : ${ctx.backlog.task_name}`);
   console.log(`AC        : ${ctx.backlog.ac || '-'}`);
   console.log(`DoD       : ${ctx.backlog.dod || '-'}`);

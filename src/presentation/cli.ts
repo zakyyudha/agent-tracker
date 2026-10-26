@@ -69,7 +69,7 @@ const program = new Command();
 program
   .name('tracker')
   .description('Agent Tracker — CLI (single database writer)')
-  .version('0.1.0');
+  .version('0.2.0');
 
 // ---------- perintah inti ----------
 program
@@ -259,12 +259,15 @@ ticket
   .description('tambah ticket ke backlog (id & seq otomatis di akhir)')
   .argument('<backlogId>')
   .requiredOption('--name <text>', 'nama ticket')
+  .option('--desc <text>', 'deskripsi / spesifikasi lingkup kerja ticket')
+  .option('--desc-file <path>', 'deskripsi ticket dari file markdown')
   .option('--assignee <text>', 'assignee', 'TBD')
   .option('--sprint <text>', 'sprint', 'Backlog')
   .option('--seq <number>', 'posisi seq manual')
   .action((backlogId: string, opts) => {
     const created = new CreateTicket(repo).execute(backlogId, {
       name: opts.name,
+      description: readText(opts.desc, opts.descFile),
       assignee: opts.assignee,
       sprint: opts.sprint,
       seq: opts.seq ? Number(opts.seq) : undefined,
@@ -277,14 +280,18 @@ ticket
   .description('update field ticket')
   .argument('<id>')
   .option('--name <text>', 'nama')
+  .option('--desc <text>', 'deskripsi / spesifikasi lingkup kerja ticket')
+  .option('--desc-file <path>', 'deskripsi ticket dari file markdown')
   .option('--assignee <text>', 'assignee')
   .option('--sprint <text>', 'sprint')
   .option('--evidence <text>', 'evidence verifikasi')
   .option('--seq <number>', 'posisi seq')
   .action((id: string, opts) => {
     const patch: Record<string, unknown> = {};
+    const desc = readText(opts.desc, opts.descFile);
     const map: [string, unknown][] = [
       ['name', opts.name],
+      ['description', desc],
       ['assignee', opts.assignee],
       ['sprint', opts.sprint],
       ['evidence', opts.evidence],

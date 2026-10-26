@@ -65,13 +65,21 @@ tracker/
 
 ## 🚀 Quick Start
 
-### 1. Installation & Compilation
+### 1. Installation & Zero-Friction Setup
+Inside your project root directory:
 ```bash
-# Install dependencies
+# 1. Clone into your project (e.g. tracker/ or agent-tracker/)
+git clone https://github.com/zakyyudha/agent-tracker.git tracker
+cd tracker
+
+# 2. Install dependencies
 pnpm install
 
-# Compile the CLI for instant sub-100ms execution
-pnpm run build:cli
+# 3. Run automated project setup
+# - Installs agent skill into ../.agents/skills/agent-tracker/
+# - Configures ../AGENTS.md with the Agent Discipline Loop & SAD/PRD Detailing rules
+# - Precompiles the CLI for sub-100ms execution
+pnpm setup
 ```
 
 ### 2. Inspecting the Frontier
@@ -107,23 +115,18 @@ node cli.mjs render
 
 ---
 
-## 🧠 Agent Skill Integration
+## 🧠 Agent Skill & Instructions Integration
 
-This repository ships with a ready-to-use coding agent skill in `skills/agent-tracker/`:
+`agent-tracker` includes automated setup for your AI coding agents:
 
-- **Path:** [`skills/agent-tracker/SKILL.md`](skills/agent-tracker/SKILL.md)
-- **Compatibility:** Antigravity, OpenCode, Claude Code, Cursor, Codex.
+- **Skill:** [`skills/agent-tracker/SKILL.md`](skills/agent-tracker/SKILL.md)
+- **Instructions Template:** [`templates/AGENTS.template.md`](templates/AGENTS.template.md)
 
-### Installing into your Project's Agent Setup:
-Copy the skill directory into your project's `.agents/skills/` (or your platform's skill directory):
-```bash
-mkdir -p .agents/skills/agent-tracker
-cp -r tracker/skills/agent-tracker/* .agents/skills/agent-tracker/
-```
-
-When installed, AI coding agents automatically discover the skill and follow the **Discipline Loop**: inspecting the frontier, decomposing atomic tickets, recording real test evidence, and maintaining 1 ticket = 1 commit.
-
----
+Running `pnpm setup` automatically copies the skill to `.agents/skills/agent-tracker/` and configures `AGENTS.md` at your project root. When installed, AI coding agents (Antigravity, OpenCode, Claude Code, Cursor, Codex) automatically discover the harness and enforce:
+- High-fidelity detailing from SAD/PRD (AC Gherkin, DoD quality bars, Notes Mermaid & DDL schemas).
+- Ticket-level scope via `--desc-file`.
+- Topological task frontier adherence.
+- 1 ticket = 1 isolated commit.
 
 ## 🛠️ CLI Reference
 

@@ -1,6 +1,6 @@
 {
   "name": "agent-tracker",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Local-first, Git-backed execution harness and Kanban engine for AI coding agents",
   "private": false,
   "license": "MIT",
@@ -10,6 +10,7 @@
   },
   "packageManager": "pnpm@10.22.0",
   "scripts": {
+    "setup": "node scripts/setup.cjs",
     "dev": "next dev -p 3100",
     "build": "pnpm run build:cli && next build",
     "build:cli": "node scripts/build-cli.cjs",

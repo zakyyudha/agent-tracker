@@ -68,6 +68,18 @@ export default function TicketPage() {
         <Field label='Sprint'>{ticket.sprint}</Field>
       </dl>
 
+      {ticket.description && (
+        <section className='mt-4 rounded-xl border border-hairline bg-surface-1 p-5'>
+          <div className='mb-2 flex items-center justify-between border-b border-hairline pb-2'>
+            <h2 className='text-[13px] font-semibold uppercase tracking-[0.6px] text-ink-muted'>
+              Ticket Scope & Technical Deliverables
+            </h2>
+            <span className='text-[11px] text-ink-subtle'>Spesifikasi mikro ticket</span>
+          </div>
+          <RichText content={ticket.description} />
+        </section>
+      )}
+
       {ticket.evidence ? (
         <section className='mt-4 rounded-xl border border-hairline bg-surface-1 p-5'>
           <h2 className='mb-2 text-[13px] font-semibold uppercase tracking-[0.6px] text-ink-muted'>

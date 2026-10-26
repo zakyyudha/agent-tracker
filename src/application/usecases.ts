@@ -74,7 +74,13 @@ export class CreateTicket {
 
   execute(
     backlogId: string,
-    input: { name: string; assignee?: string; sprint?: string; seq?: number },
+    input: {
+      name: string;
+      description?: string | null;
+      assignee?: string;
+      sprint?: string;
+      seq?: number;
+    },
   ): Ticket {
     requireBacklog(this.repo, backlogId);
     if (!input.name?.trim()) throw new ValidationError('nama ticket wajib (--name)');
@@ -89,6 +95,7 @@ export class CreateTicket {
       task_id: backlogId,
       seq,
       name: input.name.trim(),
+      description: input.description?.trim() || null,
       status: 'todo',
       assignee: input.assignee ?? 'TBD',
       sprint: input.sprint ?? 'Backlog',

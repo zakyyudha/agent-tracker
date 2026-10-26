@@ -24,6 +24,7 @@ interface TicketRow {
   task_id: string;
   seq: number;
   name: string;
+  description: string | null;
   status: Status;
   assignee: string;
   sprint: string;
@@ -31,7 +32,8 @@ interface TicketRow {
   updated_at: string;
 }
 
-const TICKET_COLS = 'id, task_id, seq, name, status, assignee, sprint, evidence, updated_at';
+const TICKET_COLS =
+  'id, task_id, seq, name, description, status, assignee, sprint, evidence, updated_at';
 
 export class SqliteTrackerRepository implements TrackerRepository {
   private readonly db: DatabaseSync;
@@ -45,12 +47,14 @@ export class SqliteTrackerRepository implements TrackerRepository {
     this.ensureColumns();
   }
 
-  /** Migrasi ringan untuk DB lama (sebelum kolom evidence ditambahkan ke schema.sql). */
+  /** Migrasi ringan untuk DB lama (sebelum kolom evidence / description ditambahkan ke schema.sql). */
   private ensureColumns() {
     const cols = (this.db.prepare('PRAGMA table_info(ticket)').all() as { name: string }[]).map(
       (c) => c.name,
     );
     if (!cols.includes('evidence')) this.db.exec('ALTER TABLE ticket ADD COLUMN evidence TEXT');
+    if (!cols.includes('description'))
+      this.db.exec('ALTER TABLE ticket ADD COLUMN description TEXT');
   }
 
   // ---------- BR ----------
@@ -154,14 +158,15 @@ export class SqliteTrackerRepository implements TrackerRepository {
   createTicket(input: Ticket): Ticket {
     this.db
       .prepare(
-        `INSERT INTO ticket (id, task_id, seq, name, status, assignee, sprint, evidence)
-         VALUES (?,?,?,?,?,?,?,?)`,
+        `INSERT INTO ticket (id, task_id, seq, name, description, status, assignee, sprint, evidence)
+         VALUES (?,?,?,?,?,?,?,?,?)`,
       )
       .run(
         input.id,
         input.task_id,
         input.seq,
         input.name,
+        input.description ?? null,
         input.status,
         input.assignee,
         input.sprint,
@@ -176,10 +181,19 @@ export class SqliteTrackerRepository implements TrackerRepository {
     const next = { ...current, ...patch };
     this.db
       .prepare(
-        `UPDATE ticket SET task_id=?, seq=?, name=?, assignee=?, sprint=?, evidence=?, updated_at=datetime('now')
+        `UPDATE ticket SET task_id=?, seq=?, name=?, description=?, assignee=?, sprint=?, evidence=?, updated_at=datetime('now')
          WHERE id=?`,
       )
-      .run(next.task_id, next.seq, next.name, next.assignee, next.sprint, next.evidence, id);
+      .run(
+        next.task_id,
+        next.seq,
+        next.name,
+        next.description ?? null,
+        next.assignee,
+        next.sprint,
+        next.evidence,
+        id,
+      );
     return this.getTicket(id)!;
   }
 

@@ -34,6 +34,7 @@ export interface Ticket {
   task_id: string;
   seq: number;
   name: string;
+  description?: string | null;
   status: Status;
   assignee: string;
   sprint: string;

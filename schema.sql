@@ -21,16 +21,17 @@ CREATE TABLE IF NOT EXISTS task (
 );
 
 CREATE TABLE IF NOT EXISTS ticket (
-  id         TEXT PRIMARY KEY,             -- e.g. TASK-001-T1 (Atomic ticket)
-  task_id    TEXT NOT NULL REFERENCES task(id),
-  seq        INTEGER NOT NULL,             -- Sequential order within backlog (T1 < T2 < ...)
-  name       TEXT NOT NULL,
-  status     TEXT NOT NULL DEFAULT 'todo'
-             CHECK (status IN ('todo','in_progress','in_review','done')),
-  assignee   TEXT NOT NULL DEFAULT 'TBD',
-  sprint     TEXT NOT NULL DEFAULT 'Backlog',
-  evidence   TEXT,                         -- Terminal execution evidence for in_review & done
-  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+  id          TEXT PRIMARY KEY,             -- e.g. TASK-001-T1 (Atomic ticket)
+  task_id     TEXT NOT NULL REFERENCES task(id),
+  seq         INTEGER NOT NULL,             -- Sequential order within backlog (T1 < T2 < ...)
+  name        TEXT NOT NULL,
+  description TEXT,                         -- Specific scope, deliverables, and test scenarios
+  status      TEXT NOT NULL DEFAULT 'todo'
+              CHECK (status IN ('todo','in_progress','in_review','done')),
+  assignee    TEXT NOT NULL DEFAULT 'TBD',
+  sprint      TEXT NOT NULL DEFAULT 'Backlog',
+  evidence    TEXT,                         -- Terminal execution evidence for in_review & done
+  updated_at  TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
 CREATE TABLE IF NOT EXISTS meta (

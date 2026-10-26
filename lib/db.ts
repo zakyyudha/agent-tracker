@@ -29,6 +29,7 @@ interface TicketRow {
   task_id: string;
   seq: number;
   name: string;
+  description: string | null;
   status: Status;
   assignee: string;
   sprint: string;
@@ -36,9 +37,10 @@ interface TicketRow {
   updated_at: string;
 }
 
-const TICKET_COLS = 'id, task_id, seq, name, status, assignee, sprint, evidence, updated_at';
+const TICKET_COLS =
+  'id, task_id, seq, name, description, status, assignee, sprint, evidence, updated_at';
 const TICKET_COLS_T =
-  't.id, t.task_id, t.seq, t.name, t.status, t.assignee, t.sprint, t.evidence, t.updated_at';
+  't.id, t.task_id, t.seq, t.name, t.description, t.status, t.assignee, t.sprint, t.evidence, t.updated_at';
 
 function markFrontier<T extends TicketRow>(rows: T[]): (T & { is_frontier?: boolean })[] {
   const byTask = new Map<string, T[]>();
@@ -125,6 +127,7 @@ export function getBoard(filters: BoardFilters = {}): BoardResponse {
     task_id: r.task_id,
     seq: r.seq,
     name: r.name,
+    description: r.description ?? null,
     status: r.status,
     assignee: r.assignee,
     sprint: r.sprint,
