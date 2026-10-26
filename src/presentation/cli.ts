@@ -69,7 +69,7 @@ const program = new Command();
 program
   .name('tracker')
   .description('Agent Tracker — CLI (single database writer)')
-  .version('0.2.1');
+  .version('0.2.2');
 
 // ---------- perintah inti ----------
 program
